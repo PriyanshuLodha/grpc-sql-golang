@@ -1,0 +1,60 @@
+syntax="proto3";
+
+option go_package="./proto";
+
+package train;
+
+message User {
+    string user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+}
+
+message Ticket {
+    string from = 1;
+    string to = 2;
+    User user = 3;
+    float price_paid = 4;
+    string seat = 5;
+}
+
+message PurchaseRequest {
+    Ticket ticket = 1;
+}
+
+message ReceiptResponse {
+    Ticket ticket = 1;
+}
+
+message ViewUsersBySectionRequest {
+    string section = 1;
+}
+
+message ViewUsersBySectionResponse {
+    repeated User user = 1;
+    map<string, string> seat_map = 2;
+}
+
+message RemoveUserRequest {
+    string user_id = 1;
+}
+
+message ModifySeatRequest {
+    string user_id = 1;
+    string new_seat = 2;
+}
+
+message ModifySeatResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+service TrainService {
+    rpc AddUser(User) returns (ModifySeatResponse);
+    rpc Purchase(PurchaseRequest) returns (ReceiptResponse);
+    rpc ViewUsersBySection(ViewUsersBySectionRequest) returns (ViewUsersBySectionResponse);
+    rpc RemoveUser(RemoveUserRequest) returns (ModifySeatResponse);
+    rpc ModifySeat(ModifySeatRequest) returns (ModifySeatResponse);
+    rpc GetReceiptForUser(User) returns (ReceiptResponse);
+}
